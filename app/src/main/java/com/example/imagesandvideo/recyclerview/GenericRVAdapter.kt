@@ -31,11 +31,16 @@ class GenericRVAdapter :RecyclerView.Adapter<GenericVH<Any>> {
     }
 
     override fun getItemCount(): Int {
-        return itemList?.size!!
+        itemList?.let {
+            return it?.size
+        } ?: kotlin.run {
+            return 0
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
         var item=itemList?.get(position) as FeedItem<*>
-        return  ItemTypeHandler.getType(item?.itemViewType?.id!!)!!
+        if(item!=null && item.itemViewType!=null && item.itemViewType!!.id!=null) return item.itemViewType!!.id!!
+        else return -1
     }
 }
