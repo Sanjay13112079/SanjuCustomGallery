@@ -9,7 +9,7 @@
        android:layout_marginTop="40dp"
        android:id="@+id/button1"
        android:layout_centerHorizontal="true"
-       android:text="Folder Flow"
+       android:text="Folder Flow "
        android:background="#Ffffff"
        android:textAllCaps="false"
        android:layout_width="wrap_content"

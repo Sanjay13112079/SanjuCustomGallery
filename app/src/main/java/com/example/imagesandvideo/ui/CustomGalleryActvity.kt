@@ -25,8 +25,4 @@ class CustomGalleryActvity : AppCompatActivity() {
         transcation.commit()
 
     }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-    }
 }

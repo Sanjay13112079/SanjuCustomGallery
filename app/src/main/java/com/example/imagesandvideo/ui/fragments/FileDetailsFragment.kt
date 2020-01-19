@@ -93,9 +93,14 @@ class FileDetailsFragment: Fragment() {
             override fun setAnchorView(view: View?) {
                 super.setAnchorView(fileDetails_container)
             }
+
+            override fun show() {
+                super.show()
+            }
         })
         fileDetails_Video.start()
     }
+
 
 
 }
