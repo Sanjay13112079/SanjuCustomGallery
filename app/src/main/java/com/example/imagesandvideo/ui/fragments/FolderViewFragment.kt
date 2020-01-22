@@ -2,6 +2,7 @@ package com.example.imagesandvideo.ui.fragments
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +22,12 @@ import kotlinx.android.synthetic.main.fragment_folder_view.*
 class FolderViewFragment: Fragment(),View.OnClickListener {
 
     private lateinit var viewModel: FileViewModel
+    private lateinit var mLayoutManager :GridLayoutManager
+
+    companion object{
+        var rvState : Parcelable?=null
+
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_folder_view, container, false)
@@ -29,9 +36,16 @@ class FolderViewFragment: Fragment(),View.OnClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(FileViewModel::class.java)
-
+         initViews()
         checkpermission()
 
+    }
+
+
+    fun initViews()
+    {
+        mLayoutManager=GridLayoutManager(App.context, 2)
+        recview?.layoutManager = mLayoutManager
     }
 
 
@@ -68,10 +82,7 @@ class FolderViewFragment: Fragment(),View.OnClickListener {
     {
         if(!folderList.isEmpty())
         {
-            recview?.layoutManager = GridLayoutManager(App.context, 2)
-            var adapter = GenericRVAdapter(
-                viewModel.getFolderFeedItemList(folderList), this
-            )
+            var adapter = GenericRVAdapter(viewModel.getFolderFeedItemList(folderList), this)
             recview?.adapter = adapter
         }
     }
@@ -93,13 +104,25 @@ class FolderViewFragment: Fragment(),View.OnClickListener {
     }
 
 
+    override fun onResume() {
+        super.onResume()
+        if(rvState!=null)mLayoutManager.onRestoreInstanceState(rvState)
+    }
+
+
+    override fun onPause() {
+        super.onPause()
+        if(rvState!=null)rvState =mLayoutManager.onSaveInstanceState()
+    }
+
+
 
 
     override fun onClick(v: View?) {
 
         when(v?.id)
         {
-            R.id.vh_container ->
+            R.id.folder_vh_container ->
             {
                 //set clicked Folder data in viewmodel
                 var data=v?.getTag(R.id.uri) as FolderData
@@ -109,5 +132,10 @@ class FolderViewFragment: Fragment(),View.OnClickListener {
 
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        rvState=null
     }
 }

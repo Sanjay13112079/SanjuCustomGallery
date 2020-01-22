@@ -43,4 +43,13 @@ class GenericRVAdapter :RecyclerView.Adapter<GenericVH<Any>> {
         if(item!=null && item.itemViewType!=null && item.itemViewType!!.id!=null) return item.itemViewType!!.id!!
         else return -1
     }
+
+
+    fun getFeeditemAtPosition(position: Int) :FeedItem<*>
+    {
+        return itemList?.get(position)!!
+    }
+
+
+
 }

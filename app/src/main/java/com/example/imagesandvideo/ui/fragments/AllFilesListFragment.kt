@@ -2,6 +2,7 @@ package com.example.imagesandvideo.ui.fragments
 
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.Parcelable
 import android.transition.Fade
 import android.view.LayoutInflater
 import android.view.View
@@ -17,14 +18,21 @@ import com.example.imagesandvideo.data.FileData
 import com.example.imagesandvideo.navigation.AppNavigator
 import com.example.imagesandvideo.recyclerview.GenericRVAdapter
 import com.example.imagesandvideo.viewmodel.FileViewModel
-import kotlinx.android.synthetic.main.fragment_folder_view.*
+import kotlinx.android.synthetic.main.all_files_fragment.*
 
 class AllFilesListFragment :Fragment(),View.OnClickListener {
 
     private lateinit var viewModel: FileViewModel
+    private lateinit var mLayoutManager :LinearLayoutManager
+
+
+    companion object{
+        var rvState :Parcelable?=null
+
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_folder_view, container, false)
+        return inflater.inflate(R.layout.all_files_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,9 +42,15 @@ class AllFilesListFragment :Fragment(),View.OnClickListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = ViewModelProviders.of(activity!!).get(FileViewModel::class.java)
-
+        initViews()
         checkpermission()
 
+    }
+
+    fun initViews()
+    {
+        mLayoutManager=LinearLayoutManager(activity)
+        cus_recview?.layoutManager=mLayoutManager
     }
 
     //run time permission
@@ -71,11 +85,8 @@ class AllFilesListFragment :Fragment(),View.OnClickListener {
     {
         if(!allFilesList.isEmpty())
         {
-            recview?.layoutManager=LinearLayoutManager(activity)
-            var adapter= GenericRVAdapter(
-                viewModel.getFilesFeedItem(allFilesList), this
-            )
-            recview.adapter=adapter
+            var adapter= GenericRVAdapter(viewModel.getFilesFeedItem(allFilesList), this)
+            cus_recview?.adapter=adapter
         }
     }
 
@@ -97,8 +108,10 @@ class AllFilesListFragment :Fragment(),View.OnClickListener {
     override fun onClick(v: View?) {
         when(v?.id)
         {
-            R.id.vh_container ->
+            R.id.file_vh_container ->
             {
+                cus_recview?.releasePlayer()
+
                 var data=v?.getTag(R.id.uri) as FileData
                 viewModel.setFileData(data)
 
@@ -107,4 +120,26 @@ class AllFilesListFragment :Fragment(),View.OnClickListener {
             }
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        if(rvState!=null)mLayoutManager.onRestoreInstanceState(rvState)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(rvState!=null)rvState =mLayoutManager.onSaveInstanceState()
+    }
+
+    override fun onDestroyView() {
+
+        rvState=null
+        cus_recview?.releasePlayer()
+        super.onDestroyView()
+    }
+
+
+
+
+
 }

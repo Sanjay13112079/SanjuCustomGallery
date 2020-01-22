@@ -20,9 +20,9 @@ class FolderVH(itemView :View) : GenericVH<FolderData>(itemView) {
         Glide.with(App.context)
             .load(data?.folderPicPath)
             .apply(RequestOptions().centerCrop())
-            .into(itemView1.vh_image)
+            .into(itemView1.folder_vh_image)
 
-        itemView1?.vh_container?.setOnClickListener(clickListner)
-        itemView1?.vh_container?.setTag(R.id.uri,data)
+        itemView1?.folder_vh_container?.setOnClickListener(clickListner)
+        itemView1?.folder_vh_container?.setTag(R.id.uri,data)
     }
 }

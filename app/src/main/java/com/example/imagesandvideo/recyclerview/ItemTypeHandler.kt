@@ -50,7 +50,7 @@ class ItemTypeHandler {
 
                  ItemViewType.FILE_VH.id ->
                  {
-                     viewHolder=FileVH(inflater.inflate(R.layout.picture_folder_item,parent,false)) as GenericVH<Any>
+                     viewHolder=FileVH(inflater.inflate(R.layout.picture_file_vh,parent,false)) as GenericVH<Any>
                  }
              }
 
